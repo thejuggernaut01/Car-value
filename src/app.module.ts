@@ -13,6 +13,7 @@ import { Report } from './reports/report.entity';
       type: 'sqlite',
       database: 'db.sqlite',
       entities: [User, Report],
+      // never set to true in a prod environment
       synchronize: true,
     }),
     UsersModule,

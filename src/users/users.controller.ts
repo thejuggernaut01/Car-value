@@ -11,22 +11,18 @@ import {
   Delete,
   NotFoundException,
   Session,
-  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user-dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { AuthService } from './auth.service';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from './users.entity';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
-// when req comes into users controller, we run the interceptor
-// pull out the user if from session object, find the user from db and
-// assign it to req object
-@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
@@ -39,6 +35,7 @@ export class UsersController {
   // }
 
   @Get('/currentUser')
+  @UseGuards(AuthGuard)
   currentUser(@CurrentUser() user: User) {
     return user;
   }

@@ -29,7 +29,7 @@ describe('AuthService', () => {
       },
     };
 
-    // This create a DI Container
+    // This create an isolated DI Container when testing
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,

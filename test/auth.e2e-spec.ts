@@ -16,14 +16,16 @@ describe('Authentication system (e2e)', () => {
   });
 
   it('handles a signup request', async () => {
+    const randomEmail = 'test9@test.com';
+
     const res = await request(app.getHttpServer())
       .post('/auth/signup')
-      .send({ email: 'swsws@sws.com', password: 'wwefere' })
+      .send({ email: randomEmail, password: 'wwefere' })
       .expect(201);
 
     const { id, email } = res.body;
 
     expect(id).toBeDefined();
-    expect(email).toEqual('swsws@sws.com');
+    expect(email).toEqual(randomEmail);
   });
 });

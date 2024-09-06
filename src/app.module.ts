@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
 import { Report } from './reports/report.entity';
 import { APP_PIPE } from '@nestjs/core';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const cookieSession = require('cookie-session');
 
 @Module({
   imports: [
@@ -38,4 +40,20 @@ import { APP_PIPE } from '@nestjs/core';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  // This configure function will be called automatically whenever our app
+  // starts listening for incoming traffic
+  configure(consumer: MiddlewareConsumer) {
+    // Inside here we can setup some middleware that will run on
+    // every single incoming request
+    consumer
+      .apply(
+        cookieSession({
+          keys: ['wjdiwswiswsw'],
+        }),
+      )
+      .forRoutes('*');
+    // forRoutes('*') means make use of this middleware on every
+    // single incoming request that flows into our entire app.
+  }
+}

@@ -7,18 +7,43 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
 import { Report } from './reports/report.entity';
 import { APP_PIPE } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieSession = require('cookie-session');
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: [User, Report],
-      // never set to true in a prod environment
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      // We need to make sure NODE_ENV is set before we start our project
+      envFilePath: `.env.${process.env.NODE_ENV}` as string,
     }),
+    TypeOrmModule.forRootAsync({
+      // This tells the DI system that we want to find the configService
+      // which should have all our config info inside of it from
+      // our chosen file and we want to get access to that instance of
+      // the configService during setup of our typeORM module.
+      inject: [ConfigService],
+
+      // This function is going t receive our instance of the configService.
+      // This is the DI part
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          entities: [User, Report],
+          // never set to true in a prod environment
+          synchronize: true,
+        };
+      },
+    }),
+    // TypeOrmModule.forRoot({
+    // type: 'sqlite',
+    // database: 'db.sqlite',
+    // entities: [User, Report],
+    // // never set to true in a prod environment
+    // synchronize: true,
+    // }),
     UsersModule,
     ReportsModule,
   ],

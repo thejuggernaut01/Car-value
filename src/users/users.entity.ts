@@ -20,6 +20,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: true })
+  admin: true;
+
   // The function call in the first argument is to solve
   // circular dependency issue
 

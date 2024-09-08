@@ -25,6 +25,9 @@ export class ReportDto {
   @Expose()
   mileage: string;
 
+  @Expose()
+  approved: boolean;
+
   // obj is a reference to the original report entity.
   // we then assign the value of obj.user.id to the new property (userId)
   @Transform(({ obj }) => obj.user.id)

@@ -66,6 +66,8 @@ const cookieSession = require('cookie-session');
   ],
 })
 export class AppModule {
+  constructor(private configService: ConfigService) {}
+
   // This configure function will be called automatically whenever our app
   // starts listening for incoming traffic
   configure(consumer: MiddlewareConsumer) {
@@ -74,7 +76,7 @@ export class AppModule {
     consumer
       .apply(
         cookieSession({
-          keys: ['wjdiwswiswsw'],
+          keys: [this.configService.get('COOKIE_KEY')],
         }),
       )
       .forRoutes('*');
